@@ -27,17 +27,20 @@ public class Analizador {
      *
      * @return String [] con los datos aprobados listos para ser ingresados a la
      * base de datos
+     * @throws ListasYPilas.ExcepcionListaEnlazada
      *
      */
 //    public ListaEnlazada<Dato> exportarDatos() {
 //
 //    }
-
+    String [] tipos = {"TIENDA","TIEMPO","PRODUCTO","CLIENTE","PEDIDO"};
+    ListaEnlazada<String> errores;
+    
     public String[] leerArchivo() throws ExcepcionListaEnlazada {
         String linea;
         ListaEnlazada<String> lineas = new ListaEnlazada();
         try {
-            BufferedReader lector = new BufferedReader(
+            BufferedReader lector = new BufferedReader(//copio todas las lineas una a una a una
                     new FileReader(selectorDeArchivo()));
             linea = lector.readLine();
             while (linea != null) {
@@ -73,23 +76,91 @@ public class Analizador {
 //    public String[] separaPorComas(String [] cadenas){
 //        String[] subCadenas = new String[cadenas.length]
 //    }
-
-    public ListaEnlazada<Dato> comprobarFormato(String[] cadenas) {
-
-        ListaEnlazada<Dato> tiendas = new ListaEnlazada();
-        ListaEnlazada<Dato> tiempo = new ListaEnlazada();
-        ListaEnlazada<Dato> productos = new ListaEnlazada();
-        ListaEnlazada<Dato> cliente = new ListaEnlazada();
-        ListaEnlazada<Dato> pedidos = new ListaEnlazada();
-        ListaEnlazada<Dato> aprobados = new ListaEnlazada();
-        ListaEnlazada<Integer> line = new ListaEnlazada();
-
+    public void distribuirStrings(String [] cadenas){
+        int contador = 0;
+        
         for (int i = 0; i < cadenas.length; i++) {
-            String[] parametro = cadenas[i].split("\\s+");
-
+            String [] sinComas = cadenas[i].split(",");
+            for (int j = 0; j < tipos.length; j++) {
+                String parametroInicial = sinComas[0];
+                if (parametroInicial.equalsIgnoreCase(tipos[j])) {
+                    contador ++;
+                }
+            }
+            if (contador == 0) {
+                errores.add(cadenas[i]);
+            }else{
+                String parametroInicial = sinComas[i];
+                if (parametroInicial.equalsIgnoreCase("TIENDA")) {
+                    if (sinComas.length!=5) {
+                        errores.add(cadenas[i]);
+                    }else{
+                        
+                    }
+                }else if (parametroInicial.equalsIgnoreCase("TIEMPO")) {
+                    if (sinComas.length!=4) {
+                        errores.add(cadenas[i]);
+                    }else{
+                        
+                    }
+                }else if (parametroInicial.equalsIgnoreCase("PRODUCTO")) {
+                    if (sinComas.length!=7) {
+                        errores.add(cadenas[i]);
+                    }else{
+                        
+                    }
+                }else if (parametroInicial.equalsIgnoreCase("EMPLEADO")) {
+                    if (sinComas.length!=5) {
+                        errores.add(cadenas[i]);
+                    }else{
+                        
+                    }
+                }else if (parametroInicial.equalsIgnoreCase("CLIENTE")) {
+                    if (sinComas.length!=5) {
+                        errores.add(cadenas[i]);
+                    }else{
+                        
+                    }
+                }else if (parametroInicial.equalsIgnoreCase("PEDIDO")) {
+                    if (sinComas.length!=10) {
+                        errores.add(cadenas[i]);
+                    }else{
+                        
+                    }
+                }
+            }
         }
-        return null;
     }
+
+    public String [] verificarTienda(String [] sinComas){
+        if (sinComas.length != 5) {
+            return null;
+        }
+//        String [] nombre = sinComas[1].split("\\s+");
+//        String [] direccion = sinComas[2].split("\\s+");
+//        String [] codigo = sinComas[3].split("\\s+");
+//        String [] telefono = sinComas[4].split("\\s+");
+//        String [] aciertos = new String[4];
+//        if (nombre[0].equalsIgnoreCase("nombre") && nombre.length == 2) {
+//            aciertos[0]=nombre[1];
+//        }else{
+//            return null;
+//        }
+        
+//        for (int i = 0; i < sinComas.length; i++) {
+//            
+//            String [] sinEspacios = sinComas[i].split("\\s+");
+//            if (sinEspacios[0].equalsIgnoreCase("nombre") && sinEspacios.length ==2) {
+//                info[0] = sinEspacios[1];
+//            }else if (sinEspacios[0].equalsIgnoreCase("direccion") && sinEspacios.length ==2) {
+//                info[1] = sinEspacios[1];
+//            }else if (sinEspacios.length == 1) {
+//                
+//            }
+//        }
+    }
+    
+    
 
 
 }
