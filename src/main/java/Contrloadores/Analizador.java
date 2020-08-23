@@ -7,7 +7,6 @@ package Contrloadores;
 
 import ListasYPilas.ExcepcionListaEnlazada;
 import ListasYPilas.ListaEnlazada;
-import formatos.Dato;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -73,94 +72,37 @@ public class Analizador {
         }
         return null;
     }
-//    public String[] separaPorComas(String [] cadenas){
-//        String[] subCadenas = new String[cadenas.length]
-//    }
+
     public void distribuirStrings(String [] cadenas){
         int contador = 0;
         
         for (int i = 0; i < cadenas.length; i++) {
             String [] sinComas = cadenas[i].split(",");
-            for (int j = 0; j < tipos.length; j++) {
+            for (String tipo : tipos) {
                 String parametroInicial = sinComas[0];
-                if (parametroInicial.equalsIgnoreCase(tipos[j])) {
+                if (parametroInicial.equalsIgnoreCase(tipo)) {
                     contador ++;
                 }
             }
             if (contador == 0) {
                 errores.add(cadenas[i]);
             }else{
-                String parametroInicial = sinComas[i];
-                if (parametroInicial.equalsIgnoreCase("TIENDA")) {
-                    if (sinComas.length!=5) {
-                        errores.add(cadenas[i]);
-                    }else{
-                        
-                    }
-                }else if (parametroInicial.equalsIgnoreCase("TIEMPO")) {
-                    if (sinComas.length!=4) {
-                        errores.add(cadenas[i]);
-                    }else{
-                        
-                    }
-                }else if (parametroInicial.equalsIgnoreCase("PRODUCTO")) {
-                    if (sinComas.length!=7) {
-                        errores.add(cadenas[i]);
-                    }else{
-                        
-                    }
-                }else if (parametroInicial.equalsIgnoreCase("EMPLEADO")) {
-                    if (sinComas.length!=5) {
-                        errores.add(cadenas[i]);
-                    }else{
-                        
-                    }
-                }else if (parametroInicial.equalsIgnoreCase("CLIENTE")) {
-                    if (sinComas.length!=5) {
-                        errores.add(cadenas[i]);
-                    }else{
-                        
-                    }
-                }else if (parametroInicial.equalsIgnoreCase("PEDIDO")) {
-                    if (sinComas.length!=10) {
-                        errores.add(cadenas[i]);
-                    }else{
-                        
-                    }
-                }
+                
             }
         }
     }
 
-    public String [] verificarTienda(String [] sinComas){
-        if (sinComas.length != 5) {
-            return null;
+    public boolean verificar(String[] sinEspacios,int size){
+        for (String sinEspacio : sinEspacios) {
+            if (sinEspacio.equals("\\s+")) {
+                return false;
+            }
         }
-//        String [] nombre = sinComas[1].split("\\s+");
-//        String [] direccion = sinComas[2].split("\\s+");
-//        String [] codigo = sinComas[3].split("\\s+");
-//        String [] telefono = sinComas[4].split("\\s+");
-//        String [] aciertos = new String[4];
-//        if (nombre[0].equalsIgnoreCase("nombre") && nombre.length == 2) {
-//            aciertos[0]=nombre[1];
-//        }else{
-//            return null;
-//        }
-        
-//        for (int i = 0; i < sinComas.length; i++) {
-//            
-//            String [] sinEspacios = sinComas[i].split("\\s+");
-//            if (sinEspacios[0].equalsIgnoreCase("nombre") && sinEspacios.length ==2) {
-//                info[0] = sinEspacios[1];
-//            }else if (sinEspacios[0].equalsIgnoreCase("direccion") && sinEspacios.length ==2) {
-//                info[1] = sinEspacios[1];
-//            }else if (sinEspacios.length == 1) {
-//                
-//            }
-//        }
+        return sinEspacios.length == size;
     }
     
+    public boolean verificarFormato(String[] sinEspacios){
+        
+    }
     
-
-
 }

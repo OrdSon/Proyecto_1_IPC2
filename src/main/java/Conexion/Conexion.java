@@ -21,6 +21,9 @@ public class Conexion {
         String url = "jdbc:mysql://localhost:3306/Intelaf?useSSL=false";
         String usuario = "empleado";
         String contraseña = "amorAl7R4B4J0.";
+//        String usuario = "root";
+//        String contraseña = "Shinouyo0.";
+        
         if (conexion != null) {
             System.out.println("conexion guardada");
             return conexion;
