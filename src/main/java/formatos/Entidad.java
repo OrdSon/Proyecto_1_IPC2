@@ -11,16 +11,19 @@ package formatos;
  */
 public class Entidad {
 
-    public static String TIENDA = "Tienda";
-    public static String TIEMPO = "Tiempo";
-    public static String PRODUCTO = "Producto";
-    public static String PRODUCTO_TIENDA = "Tienda_tiene_Producto";
-    public static String EMPLEADO = "Empleado";
-    public static String CLIENTE = "Cliente";
-    public static String SESION = "Sesion";
-    public static String INFO_COMPRA = "info_compra";
-    public static String INFO_COMPRA_PRODUCTO = "info_compra_producto";
-    public static String VENTA = "Venta";
-    public static String PEDIDO_ANTIGUO = "Pedido_antiguo";
-    // Constantes 
+    public static final int TIENDA = 1;
+    public static final int TIEMPO = 2;
+    public static final int PRODUCTO = 3;
+    public static final int PRODUCTO_TIENDA = 4;
+    public static final int EMPLEADO = 5;
+    public static final int CLIENTE = 6;
+    public static final int SESION = 7;
+    public static final int INFO_COMPRA = 8;
+    public static final int INFO_COMPRA_PRODUCTO = 9;
+    public static final int VENTA = 10;
+    public static final int PEDIDO_ANTIGUO = 11;
+    public static final int PEDIDO = 12;
+    // Constantes Numericas:
+    public static final int EDITAR = 13;
+    public static final int CREAR = 14;
 }

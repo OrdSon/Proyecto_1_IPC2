@@ -17,30 +17,17 @@ import javax.swing.JOptionPane;
  *
  * @author samuelson
  */
-public class Escritor {
+public class Editor {
 
-    public Escritor() {
+    public Editor() {
     }
-
-    /**
+    
+     /**
      *
-     *
-     *
-     * @param args
-     */
-    public static void main(String[] args) {
-//        String[] info = {"prueba", "ciudad", "980", "55544488", "45645612"};
-        Escritor escritor = new Escritor();
-
-    }
-
-    /**
-     *
-     * @param info (nombre, direccion, codigo, telefono1, telefono2, email,
-     * horario);
+     * @param info (nombre, direccion, telefono1, telefono2, email, horario, codigo);
      */
     public void crearTienda(String[] info) {
-        String query = "INSERT INTO Tienda (nombre, direccion, codigo, telefono1, telefono2, email, horario)VALUES (?,?,?,?,?,?,?)";
+        String query = "UPDATE Tienda SET nombre = ?, direccion = ?, telefono1 = ?, telefono2 = ?, email = ?, horarop = ? WHERE codigo=?";
         try (PreparedStatement estado = Conexion.getConexion().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             for (int i = 0; i < info.length; i++) {
                 if (info[i] == null || info[i].equals("") || info[i].equals("\\s+")) {
@@ -59,8 +46,8 @@ public class Escritor {
      *
      * @param info (NIT, nombre, telefono, direccion, email, DPI, CREDITO)
      */
-    public void crearCliente(String[] info) {
-        String query = "INSERT INTO Cliente (NIT, nombre, telefono, direccion, email, DPI, CREDITO) VALUES (?,?,?,?,?,?,?)";
+    public void crearCliente(String[] info, String codigo) {
+        String query = "UPDATE Cliente SET nombre = ?, telefono = ?, direccion = ?, email = ?, DPI = ?, CREDITO = ? WHERE NIT = ?";
         try (PreparedStatement estado = Conexion.getConexion().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             for (int i = 0; i < info.length; i++) {
                 if (info[i] == null || info[i].equals("") || info[i].equals("\\s+")) {
@@ -71,6 +58,8 @@ public class Escritor {
                     estado.setString((i + 1), info[i]);
                 }
             }
+            estado.setString(7, codigo);
+            
             estado.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
@@ -78,7 +67,7 @@ public class Escritor {
     }
 
     public void crearTiempo(String[] info) {
-        String query = "INSERT INTO Tiempo (tienda_emisora, tienda_receptora, tiempo) VALUES (?,?,?)";
+        String query = "UPDATE Tiempo SET tiempo = ? WHERE tienda_emisora = ? AND tienda_receptora = ?";
         try (PreparedStatement estado = Conexion.getConexion().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             estado.setInt(1, Integer.parseInt(info[0]));
             estado.setString(2, info[1]);
@@ -222,61 +211,4 @@ public class Escritor {
     }
     }
     
-//    public static void crear(String[] info,String tipo)  {
-//        String query = "";
-//        if (tipo.equals(Entidad.TIENDA)) {
-//            query = "INSERT INTO Tienda (nombre, direccion, codigo, telefono1, telefono2)VALUES (?,?,?,?,?)";
-//        }else if (tipo.equals(Entidad.TIEMPO)) {
-//            query = "INSERT INTO Tiempo (tienda_emisora, tienda_receptora, tiempo) VALUES (?,?,?)";
-//        }else if (tipo.equals(Entidad.PRODUCTO)) {
-//            query = "INSERT INTO Producto (nombre, fabricante, codigo, precio) VALUES (?,?,?,?,?)";
-//        }else if (tipo.equals(Entidad.PRODUCTO_TIENDA)) {
-//            query = "INSERT INTO Tienda_tiene_Producto(codigo_tienda, codigo_producto, cantidad) VALUES(?,?,?)";
-//        }else if (tipo.equals(Entidad.EMPLEADO)) {
-//            query = "INSERT INTO Empleado (nombre, codigo, NIT, DPI) VALUES (?,?,?,?)";
-//        }else if (tipo.equals(Entidad.CLIENTE)) {
-//            query = "INSERT INTO Cliente (nombre, NIT, DPI, credito) VALUES (?,?,?,?)";            
-//        }else if (tipo.equals(Entidad.PEDIDO_ANTIGUO)) {
-//            query = "INSERT INTO Pedido_antiguo (codigo, fecha) VALUES (?,?)";            
-//        }else if(tipo.equals())
-//        
-//        try (PreparedStatement estado = Conexion.getConexion().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-//            for (int i = 0; i < info.length; i++) {
-//                if (info[i].equals("")||info[i].eq) {
-//                    
-//                }
-//                if (tipo.equals("Tiempo") && i == (info.length-1)) {
-//                    estado.setInt(i+1, Integer.parseInt(info[i]));
-//                }else if (tipo.equals("Producto") && i == 3) {
-//                    estado.setDouble(i+1, Double.parseDouble(info[i]));
-//                }else if(tipo.equals("Tienda_tiene_Producto") && i == 2){
-//                    estado.setInt(i+1, Integer.parseInt(info[2]));
-//                }else if (tipo.equals(Entidad.CLIENTE) && i == 3) {
-//                    estado.setInt(i+1, Integer.parseInt(info[i]));
-//                }else if (tipo.equals(Entidad.PEDIDO_ANTIGUO)) {
-//                    SimpleDateFormat formatoFecha = new SimpleDateFormat("dd-MMM-yyyy");  
-//                    estado.setInt(1, Integer.parseInt(info[0]));
-//                    java.sql.Date fecha = new java.sql.Date(formatoFecha.parse(info[1]).getTime());
-//                    estado.setDate(i, fecha);
-//                }
-//                estado.setString(i+1, info[i]);
-//            }
-//            if (tipo.equals(Entidad.PRODUCTO)) {
-//                //codigo de producto, cantidad, tienda;
-//                String [] datos = {info[2], info[4], info[5]};
-//                crear(datos, Entidad.PRODUCTO_TIENDA);
-//            }else if (tipo.equals(Entidad.PEDIDO_ANTIGUO)) {
-//                //tienda1, tienda2, nit,anticipo
-//                String [] datos = {info[2], info[3], info[4], info[5]};
-//                String [] producto = {info[6], info[7]};
-//                crear(datos, Entidad.INFO_COMPRA);
-//                crear(producto, Entidad.INFO_COMPRA_PRODUCTO);
-//            }
-//            estado.executeUpdate();
-//        } catch (SQLException e) {
-//            System.out.println("Error: " + e.getMessage());
-//        } catch (ParseException ex) {
-//            Logger.getLogger(Escritor.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
-
+}

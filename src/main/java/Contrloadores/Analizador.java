@@ -73,25 +73,6 @@ public class Analizador {
         return null;
     }
 
-    public void distribuirStrings(String [] cadenas){
-        int contador = 0;
-        
-        for (int i = 0; i < cadenas.length; i++) {
-            String [] sinComas = cadenas[i].split(",");
-            for (String tipo : tipos) {
-                String parametroInicial = sinComas[0];
-                if (parametroInicial.equalsIgnoreCase(tipo)) {
-                    contador ++;
-                }
-            }
-            if (contador == 0) {
-                errores.add(cadenas[i]);
-            }else{
-                
-            }
-        }
-    }
-
     public boolean verificar(String[] sinEspacios,int size){
         for (String sinEspacio : sinEspacios) {
             if (sinEspacio.equals("\\s+")) {
@@ -101,8 +82,5 @@ public class Analizador {
         return sinEspacios.length == size;
     }
     
-    public boolean verificarFormato(String[] sinEspacios){
-        
-    }
-    
+
 }
