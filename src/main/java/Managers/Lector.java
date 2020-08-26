@@ -6,12 +6,20 @@
 package Managers;
 
 import Conexion.Conexion;
+import ListasYPilas.ExcepcionListaEnlazada;
+import ListasYPilas.ListaEnlazada;
+import formatos.Constantes;
 import formatos.Entidad;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -21,67 +29,83 @@ public class Lector {
 
     public Lector() {
     }
-    
-    public Object [] leerTabla(int tipo){
+
+    public DefaultTableModel leerTabla(int tipo) {
         String query = "";
+        DefaultTableModel modelo = new DefaultTableModel();
         switch (tipo) {
             case Entidad.TIENDA:
                 query = "SELECT * FROM Tienda";
+                for (int i = 0; i < Constantes.Tienda.length; i++) {
+                    modelo.addColumn(Constantes.Tienda[i]);
+                }
                 break;
             case Entidad.CLIENTE:
                 query = "SELECT * FROM Cliente";
+                for (int i = 0; i < Constantes.Cliente.length; i++) {
+                    modelo.addColumn(Constantes.Cliente[i]);
+                }
                 break;
             case Entidad.EMPLEADO:
                 query = "SELECT * FROM Empleado";
+                for (int i = 0; i < Constantes.Empleado.length; i++) {
+                    modelo.addColumn(Constantes.Empleado[i]);
+                }
                 break;
             case Entidad.PRODUCTO:
                 query = "SELECT * FROM Producto";
+                for (int i = 0; i < Constantes.Producto.length; i++) {
+                    modelo.addColumn(Constantes.Producto[i]);
+                }
                 break;
             case Entidad.PRODUCTO_TIENDA:
-                query = "SELECT Producto.*, Tienda_tiene_Producto.* FROM Producto, Tienda_tiene_Producto";
-                break;
-            case Entidad.INFO_COMPRA:
+                query = "select Tienda.nombre as Tienda, Producto.*, Tienda_tiene_Producto.cantidad from Producto, Tienda inner join Tienda_tiene_Producto on Tienda.codigo = Tienda_tiene_Producto.codigo_tienda";
+                for (int i = 0; i < Constantes.Existencia.length; i++) {
+                    modelo.addColumn(Constantes.Existencia[i]);
+                }
                 break;
             case Entidad.TIEMPO:
                 query = "SELECT * FROM Tiempo";
+                for (int i = 0; i < Constantes.Tiempo.length; i++) {
+                    modelo.addColumn(Constantes.Tiempo[i]);
+                }
                 break;
             case Entidad.INFO_COMPRA_PRODUCTO:
                 break;
             case Entidad.VENTA:
                 query = "SELECT Venta.*, info_compra.* FROM Venta, info_compra";
+                for (int i = 0; i < Constantes.Venta.length; i++) {
+                    modelo.addColumn(Constantes.Venta[i]);
+                }
                 break;
             case Entidad.PEDIDO:
                 query = "SELECT Pedido.*, info_compra.* FROM Pedido, info_compra";
+                for (int i = 0; i < Constantes.Pedido.length; i++) {
+                    modelo.addColumn(Constantes.Pedido[i]);
+                }
                 break;
             default:
                 break;
         }
-         Object[][] info = new Object[1][1];
+
         try (PreparedStatement estado = Conexion.getConexion().prepareStatement(query);
                 ResultSet resultado = estado.executeQuery()) {
             ResultSetMetaData meta = resultado.getMetaData();
             int columnas = meta.getColumnCount();
-            int tuplas = 0;
-            while (resultado.next()) {                
-                tuplas++;
-            }
-            info = new Object[tuplas][columnas]; 
             int contador = 0;
-            while (resultado.next()) {                
+            while (resultado.next()) {
+                Object[] filas = new Object[columnas];
                 for (int i = 0; i < columnas; i++) {
-                    info[contador][i] = resultado.getObject(i+1);
+                    filas[i] = (resultado.getObject(i + 1));
                 }
+                modelo.addRow(filas);
                 contador++;
             }
-            
+
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage());
+
         }
-        if (info[0] == null) {
-            return null;
-        }
-    return info;
-        
+        return modelo;
     }
-    
 }

@@ -17,4 +17,12 @@ public class Constantes {
     public static final int CREAR_PRODUCTO = 14;
     public static final int CREAR_TIEMPO = 15;
     
+    public static final String [] Tienda = {"Nombre", "direccion", "codigo","telefono", "telefono 2", "email", "horario"};
+    public static final String [] Cliente = {"NIT","Nombre","Telefono","Dirección","E-mail","DPI","Credito"};
+    public static final String [] Empleado = {"Codigo","Nombre","Telefono","DPI","Direccion","E-mail","Nit"};
+    public static final String [] Producto = {"Codigo","Nombre","Fabricante","Precio","Descripcion","Garantia"};
+    public static final String [] Existencia = {"Nombre","Codigo","Fabricante","Precio","Descripcion","garantia","cantidad","tienda"};
+    public static final String [] Tiempo = {"Tienda emisora", "Tienda receptora", "Dias"};
+    public static final String [] Venta = {"Codigo", "Fecha", "Cantidad", "Anticipo", "Total", "NIT Cliente"};
+    public static final String [] Pedido = {"Codigo", "Fecha", "Recibido", "Cantidad", "Anticipo", "Total", "ID Tiempo", "NIT Cliente"};
 }
