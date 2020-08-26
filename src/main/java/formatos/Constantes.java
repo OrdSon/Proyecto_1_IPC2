@@ -22,7 +22,7 @@ public class Constantes {
     public static final String [] Empleado = {"Codigo","Nombre","Telefono","DPI","Direccion","E-mail","Nit"};
     public static final String [] Producto = {"Codigo","Nombre","Fabricante","Precio","Descripcion","Garantia"};
     public static final String [] Existencia = {"Nombre","Codigo","Fabricante","Precio","Descripcion","garantia","cantidad","tienda"};
-    public static final String [] Tiempo = {"Tienda emisora", "Tienda receptora", "Dias"};
+    public static final String [] Tiempo = {"Codigo","Dias","Tienda emisora", "Tienda receptora"};
     public static final String [] Venta = {"Codigo", "Fecha", "Cantidad", "Anticipo", "Total", "NIT Cliente"};
     public static final String [] Pedido = {"Codigo", "Fecha", "Recibido", "Cantidad", "Anticipo", "Total", "ID Tiempo", "NIT Cliente"};
 }

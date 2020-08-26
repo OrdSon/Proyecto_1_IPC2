@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -107,5 +108,69 @@ public class Lector {
 
         }
         return modelo;
+    }
+
+
+
+    public void llenarComboBoxTienda(JComboBox combo) {
+        String query = "SELECT codigo FROM Tienda";
+        try (PreparedStatement estado = Conexion.getConexion().prepareStatement(query);
+                ResultSet resultado = estado.executeQuery()) {
+            int contador = 1;
+            while (resultado.next()) {
+                combo.addItem(resultado.getString(contador));
+            }
+            contador++;
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+
+        }
+    }
+
+    public void llenarComboBoxCliente(JComboBox combo) {
+        String query = "SELECT NIT FROM Cliente";
+        try (PreparedStatement estado = Conexion.getConexion().prepareStatement(query);
+                ResultSet resultado = estado.executeQuery()) {
+            int contador = 1;
+            while (resultado.next()) {
+                combo.addItem(resultado.getString(contador));
+            }
+            contador++;
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+
+        }
+    }
+
+    public String averiguarCodigo() {
+        String query = "SELECT MAX(codigo) from info_compra";
+        String codigo = "";
+        try (PreparedStatement estado = Conexion.getConexion().prepareStatement(query);
+                ResultSet resultado = estado.executeQuery()) {
+            if (resultado.next()) {
+                codigo = resultado.getInt(1) + "";
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+
+        }
+        return codigo;
+    }
+
+    public int averiguarTiempo(String emisora, String receptor) {
+        String query = "select codigo from Tiempo where Tiempo.tienda_emisora = ? and Tiempo.tienda_receptora = ?";
+        int codigo = 0;
+        try (PreparedStatement estado = Conexion.getConexion().prepareStatement(query)) {
+            estado.setString(1, emisora);
+            estado.setString(2, receptor);
+            ResultSet result = estado.executeQuery();
+            if (result.next()) {
+                codigo = result.getInt(1);
+            }
+            System.out.println(result);
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return codigo;
     }
 }
