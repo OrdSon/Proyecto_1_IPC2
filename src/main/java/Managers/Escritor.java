@@ -31,7 +31,9 @@ public class Escritor {
     public static void main(String[] args) {
 //        String[] info = {"prueba", "ciudad", "980", "55544488", "45645612"};
         Escritor escritor = new Escritor();
-
+                            //(codigo,nombre,fabricante,precio,descripcion,garantia,codigo_tienda,codigo_producto,cantidad);
+        String [] Producto = {"c2","Barbaro","fabrica","50","es una barbaro","12","2","2","500"};
+        escritor.crearProducto(Producto);
     }
 
     /**
@@ -143,12 +145,12 @@ public class Escritor {
         }
         try (PreparedStatement estado = Conexion.getConexion().prepareStatement(queryExtra, Statement.CLOSE_CURRENT_RESULT)) {
             estado.setString(1, info[6]);
-            estado.setString(2, info[7]);
-            estado.setInt(2, Integer.parseInt(info[8]));
+            estado.setString(2, info[0]);
+            estado.setInt(3, Integer.parseInt(info[8]));
+            estado.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
-
     }
 
     /**
@@ -174,8 +176,25 @@ public class Escritor {
      * @param info
      * (codigo, fecha, recibido, codigo_compra);
      */
-    public void crearPedido(String [] info){
+    public void crearPedidoAntiguo(String [] info){
         String query = "INSERT INTO Pedido (codigo, fecha, recibido, codigo_compra) VALUES (?,?,?,?)";  
+        try (PreparedStatement estado = Conexion.getConexion().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
+            estado.setInt(1, Integer.parseInt(info[0]));
+            Date date = Date.valueOf(info[1]);
+            estado.setDate(2, date);
+            if (info[1] == null) {
+                estado.setNull(3, Types.TINYINT);
+            }else{
+                estado.setInt(3, Integer.parseInt(info[1]));
+            }
+            estado.setInt(4, Integer.parseInt(info[2]));
+            estado.executeUpdate();
+        } catch (SQLException e) {
+        }
+    }
+    
+    public void crearPedido(String [] info){
+        String query = "INSERT INTO Pedido (fecha, recibido, codigo_compra) VALUES (?,?,?)";  
         try (PreparedStatement estado = Conexion.getConexion().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
             Date date = Date.valueOf(info[0]);
             estado.setDate(2, date);

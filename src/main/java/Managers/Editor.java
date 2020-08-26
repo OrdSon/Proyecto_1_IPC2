@@ -6,7 +6,7 @@
 package Managers;
 
 import Conexion.Conexion;
-import java.sql.Date;
+import formatos.Entidad;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -21,13 +21,14 @@ public class Editor {
 
     public Editor() {
     }
-    
-     /**
+
+    /**
      *
-     * @param info (nombre, direccion, telefono1, telefono2, email, horario, codigo);
+     * @param info (nombre, direccion, telefono1, telefono2, email, horario,
+     * codigo);
      */
     public void crearTienda(String[] info) {
-        String query = "UPDATE Tienda SET nombre = ?, direccion = ?, telefono1 = ?, telefono2 = ?, email = ?, horarop = ? WHERE codigo=?";
+        String query = "UPDATE Tienda SET nombre = ?, direccion = ?, telefono1 = ?, telefono2 = ?, email = ?, horario = ? WHERE codigo=?";
         try (PreparedStatement estado = Conexion.getConexion().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             for (int i = 0; i < info.length; i++) {
                 if (info[i] == null || info[i].equals("") || info[i].equals("\\s+")) {
@@ -38,7 +39,7 @@ public class Editor {
             }
             estado.executeUpdate();
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,"Error: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
         }
     }
 
@@ -59,7 +60,7 @@ public class Editor {
                 }
             }
             estado.setString(7, codigo);
-            
+
             estado.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
@@ -81,9 +82,10 @@ public class Editor {
     /**
      *
      * @param info (codigo, nombre, telefono, DPI, direccion, email, NIT)
+     * @param codigo
      */
-    public void crearEmpleado(String[] info) {
-        String query = "INSERT INTO Empleado (codigo, nombre, telefono, DPI, direccion, email, NIT) VALUES (?,?,?,?,?,?,?)";
+    public void crearEmpleado(String[] info, String codigo) {
+        String query = "UPDATE Empleado SET nombre = ?, telefono = ?, DPI = ?, direccion = ?, email = ?, NIT = ? WHERE codigo = ?";
         try (PreparedStatement estado = Conexion.getConexion().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             for (int i = 0; i < info.length; i++) {
                 if (info[i] == null || info[i].equals("") || info[i].equals("\\s+")) {
@@ -91,7 +93,9 @@ public class Editor {
                 } else {
                     estado.setString((i + 1), info[i]);
                 }
-            }estado.executeUpdate();
+            }
+            estado.setString(7, codigo);
+            estado.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -104,20 +108,21 @@ public class Editor {
      * Array tamaño 9
      */
     public void crearProducto(String[] info) {
-        String queryExtra = "INSERT INTO Tienda_tiene_Producto(codigo_tienda, codigo_producto, cantidad) VALUES(?,?,?)";
-        String query = "INSERT INTO Producto (codigo,nombre,fabricante,precio,descripcion,garantia) VALUES (?,?,?,?,?,?)";
+        String queryExtra = "UPDATE Tienda_tiene_Producto SET cantidad = ? WHERE codigo_tienda = ? AND codigo_producto = ?";
+        String query = "UPDATE Prdocuto SET nombre = ?, fabricante = ?, precio = ?, descripcion = ?, garantia = ? WHERE codigo = ?";
         try (PreparedStatement estado = Conexion.getConexion().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            for (int i = 0; i < 6; i++) {
+
+            for (int i = 1; i < 6; i++) {
 
                 if (info[i] == null || info[i].equals("") || info[i].equals("\\s+")) {
                     estado.setNull((i + 1), Types.VARCHAR);
-                } else if (i == 3) {
+                } else if (i == 2) {
                     if (info[i].equals("")) {
                         estado.setNull(i + 1, Types.DOUBLE);
                     } else {
                         estado.setDouble((i + 1), Double.parseDouble(info[i]));
                     }
-                } else if (i == 5) {
+                } else if (i == 4) {
                     if (info[i].equals("")) {
                         estado.setNull(i + 1, Types.INTEGER);
                     } else {
@@ -126,14 +131,17 @@ public class Editor {
                 } else {
                     estado.setString((i + 1), info[i]);
                 }
-            }estado.executeUpdate();
+            }
+            estado.setString(1, info[0]);
+            estado.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
         try (PreparedStatement estado = Conexion.getConexion().prepareStatement(queryExtra, Statement.CLOSE_CURRENT_RESULT)) {
-            estado.setString(1, info[6]);
-            estado.setString(2, info[7]);
-            estado.setInt(2, Integer.parseInt(info[8]));
+            estado.setInt(1, Integer.parseInt(info[8]));
+            estado.setString(2, info[6]);
+            estado.setString(3, info[0]);
+            estado.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -142,73 +150,26 @@ public class Editor {
 
     /**
      *
-     * @param info
-     * (anticipo, total, codigo_tiempo,NIT_cliente)
+     * @param recibido
+     * @param tipo
+     * @param codigo
      */
-    public void crearInfoDeCompra(String[] info) {
-        String query = "INSERT INTO info_compra (anticipo, total, codigo_tiempo, NIT_cliente)";
+    public void recibirPedido(boolean recibido, int tipo, int codigo) {
+        String query = "";
+        if (tipo == Entidad.PEDIDO_ANTIGUO) {
+            query = "UPDATE Pedido SET recibido = ? WHERE codigo = ?";
+        }else if (tipo == Entidad.PEDIDO) {
+            query = "UPDATE Pedido_antiguo SET recibido = ? WHERE codigo = ?";
+        }
         try (PreparedStatement estado = Conexion.getConexion().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            estado.setDouble(3, Double.parseDouble(info[0]));
-            estado.setDouble(4, Double.parseDouble(info[1]));
-            estado.setInt(5, Integer.parseInt(info[2]));
-            estado.setString(6, info[3]);
-            estado.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-    }
-    
-    /**
-     *
-     * @param info
-     * (codigo, fecha, recibido, codigo_compra);
-     */
-    public void crearPedido(String [] info){
-        String query = "INSERT INTO Pedido (codigo, fecha, recibido, codigo_compra) VALUES (?,?,?,?)";  
-        try (PreparedStatement estado = Conexion.getConexion().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
-            Date date = Date.valueOf(info[0]);
-            estado.setDate(2, date);
-            if (info[1] == null) {
-                estado.setNull(3, Types.TINYINT);
+            if (recibido == true) {
+                estado.setInt(1, 1);
             }else{
-                estado.setInt(3, Integer.parseInt(info[1]));
+                estado.setInt(1, 0);
             }
-            estado.setInt(4, Integer.parseInt(info[2]));
-            estado.executeUpdate();
+            estado.setInt(2, codigo);
         } catch (SQLException e) {
         }
     }
-    
-    public void crearListaProductos(String [] info){
-        String query = "INSERT INTO info_compra_producto (codigo_producto, cantidad, codigo_compra) VALUES (?,?,?)";
-        try (PreparedStatement estado = Conexion.getConexion().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
-            estado.setString(1, info[0]);
-            estado.setString(2, info[1]);
-            estado.setInt(3, Integer.parseInt(info[2]));
-            estado.executeUpdate();
-        } catch (SQLException e) {
-        }
-    }
-    public void crearSesion(String cliente, String tienda){
-        String query = "INSERT INTO Sesion (codigo_tienda, codigo_cliente) VALUES (?,?)";
-        try (PreparedStatement estado = Conexion.getConexion().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
-            estado.setString(1, cliente);
-            estado.setString(2, tienda);
-            estado.executeUpdate();
-        } catch (SQLException e) {
-        }
-    }
-    
-    public void crearVenta(String fecha, String codigoVenta){
-        String query = "INSERT INTO Venta (fecha, codigo_compra) VALUES (?,?)";
-        try (PreparedStatement estado = Conexion.getConexion().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
-            Date date = Date.valueOf(fecha);
-            estado.setDate(1, date);
-            estado.setInt(2, Integer.parseInt(codigoVenta));
-            estado.executeUpdate();
-        } catch (SQLException e) {
-        }
-    }
-    }
-    
+
 }

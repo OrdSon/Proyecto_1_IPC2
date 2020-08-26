@@ -22,7 +22,7 @@ public class Lector {
     public Lector() {
     }
     
-    public void leerTabla(int tipo){
+    public Object [] leerTabla(int tipo){
         String query = "";
         switch (tipo) {
             case Entidad.TIENDA:
@@ -38,7 +38,7 @@ public class Lector {
                 query = "SELECT * FROM Producto";
                 break;
             case Entidad.PRODUCTO_TIENDA:
-                query = "SELECT * FROM Tienda_tiene_Producto";
+                query = "SELECT Producto.*, Tienda_tiene_Producto.* FROM Producto, Tienda_tiene_Producto";
                 break;
             case Entidad.INFO_COMPRA:
                 break;
@@ -56,6 +56,7 @@ public class Lector {
             default:
                 break;
         }
+         Object[][] info = new Object[1][1];
         try (PreparedStatement estado = Conexion.getConexion().prepareStatement(query);
                 ResultSet resultado = estado.executeQuery()) {
             ResultSetMetaData meta = resultado.getMetaData();
@@ -64,7 +65,7 @@ public class Lector {
             while (resultado.next()) {                
                 tuplas++;
             }
-            Object[][] info = new Object[tuplas][columnas]; 
+            info = new Object[tuplas][columnas]; 
             int contador = 0;
             while (resultado.next()) {                
                 for (int i = 0; i < columnas; i++) {
@@ -76,7 +77,10 @@ public class Lector {
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
-    
+        if (info[0] == null) {
+            return null;
+        }
+    return info;
         
     }
     
